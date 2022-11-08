@@ -1,0 +1,7 @@
+4: New Node being added: 1
+4: New Node being added: 6
+4: New Node being added: 2
+4: New Node being added: 3
+4: New Node being added: 5
+4: Non-Leaf Node deleted; removed: 5
+4: Non-Leaf Node deleted; removed: 3
