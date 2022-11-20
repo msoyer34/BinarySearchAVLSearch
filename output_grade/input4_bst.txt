@@ -1,0 +1,141 @@
+70.121.111.113: New node being added with IP:75.17.117.32
+70.121.111.113: New node being added with IP:48.8.63.88
+70.121.111.113: New node being added with IP:84.39.13.112
+75.17.117.32: New node being added with IP:84.39.13.112
+70.121.111.113: New node being added with IP:101.18.114.55
+48.8.63.88: New node being added with IP:101.18.114.55
+70.121.111.113: New node being added with IP:125.107.105.73
+48.8.63.88: New node being added with IP:125.107.105.73
+101.18.114.55: New node being added with IP:125.107.105.73
+70.121.111.113: New node being added with IP:41.32.115.74
+48.8.63.88: New node being added with IP:41.32.115.74
+101.18.114.55: New node being added with IP:41.32.115.74
+125.107.105.73: New node being added with IP:41.32.115.74
+70.121.111.113: New node being added with IP:11.64.104.41
+48.8.63.88: New node being added with IP:11.64.104.41
+101.18.114.55: New node being added with IP:11.64.104.41
+125.107.105.73: New node being added with IP:11.64.104.41
+70.121.111.113: New node being added with IP:112.40.81.107
+48.8.63.88: New node being added with IP:112.40.81.107
+101.18.114.55: New node being added with IP:112.40.81.107
+125.107.105.73: New node being added with IP:112.40.81.107
+11.64.104.41: New node being added with IP:112.40.81.107
+70.121.111.113: New node being added with IP:58.56.17.46
+48.8.63.88: New node being added with IP:58.56.17.46
+70.121.111.113: New node being added with IP:33.108.124.5
+48.8.63.88: New node being added with IP:33.108.124.5
+101.18.114.55: New node being added with IP:33.108.124.5
+125.107.105.73: New node being added with IP:33.108.124.5
+41.32.115.74: New node being added with IP:33.108.124.5
+70.121.111.113: New node being added with IP:59.116.46.123
+48.8.63.88: New node being added with IP:59.116.46.123
+58.56.17.46: New node being added with IP:59.116.46.123
+70.121.111.113: New node being added with IP:29.16.99.29
+48.8.63.88: New node being added with IP:29.16.99.29
+101.18.114.55: New node being added with IP:29.16.99.29
+125.107.105.73: New node being added with IP:29.16.99.29
+41.32.115.74: New node being added with IP:29.16.99.29
+33.108.124.5: New node being added with IP:29.16.99.29
+70.121.111.113: New node being added with IP:6.8.64.115
+48.8.63.88: New node being added with IP:6.8.64.115
+58.56.17.46: New node being added with IP:6.8.64.115
+59.116.46.123: New node being added with IP:6.8.64.115
+70.121.111.113: New node being added with IP:4.102.121.23
+48.8.63.88: New node being added with IP:4.102.121.23
+101.18.114.55: New node being added with IP:4.102.121.23
+125.107.105.73: New node being added with IP:4.102.121.23
+41.32.115.74: New node being added with IP:4.102.121.23
+33.108.124.5: New node being added with IP:4.102.121.23
+70.121.111.113: New node being added with IP:41.89.94.125
+48.8.63.88: New node being added with IP:41.89.94.125
+101.18.114.55: New node being added with IP:41.89.94.125
+125.107.105.73: New node being added with IP:41.89.94.125
+41.32.115.74: New node being added with IP:41.89.94.125
+70.121.111.113: New node being added with IP:97.37.9.100
+75.17.117.32: New node being added with IP:97.37.9.100
+84.39.13.112: New node being added with IP:97.37.9.100
+70.121.111.113: New node being added with IP:1.116.122.104
+48.8.63.88: New node being added with IP:1.116.122.104
+101.18.114.55: New node being added with IP:1.116.122.104
+70.121.111.113: New node being added with IP:50.82.104.15
+48.8.63.88: New node being added with IP:50.82.104.15
+58.56.17.46: New node being added with IP:50.82.104.15
+70.121.111.113: New node being added with IP:99.100.72.80
+75.17.117.32: New node being added with IP:99.100.72.80
+84.39.13.112: New node being added with IP:99.100.72.80
+97.37.9.100: New node being added with IP:99.100.72.80
+58.56.17.46: Sending message to: 59.116.46.123
+59.116.46.123: Received message from: 58.56.17.46
+41.32.115.74: Leaf Node Deleted: 41.89.94.125
+75.17.117.32: Sending message to: 41.32.115.74
+70.121.111.113: Transmission from: 75.17.117.32 receiver: 41.32.115.74 sender:75.17.117.32
+48.8.63.88: Transmission from: 70.121.111.113 receiver: 41.32.115.74 sender:75.17.117.32
+101.18.114.55: Transmission from: 48.8.63.88 receiver: 41.32.115.74 sender:75.17.117.32
+125.107.105.73: Transmission from: 101.18.114.55 receiver: 41.32.115.74 sender:75.17.117.32
+41.32.115.74: Received message from: 75.17.117.32
+75.17.117.32: Node with single child Deleted: 84.39.13.112
+48.8.63.88: Non Leaf Node Deleted; removed: 58.56.17.46 replaced: 59.116.46.123
+75.17.117.32: Sending message to: 41.32.115.74
+70.121.111.113: Transmission from: 75.17.117.32 receiver: 41.32.115.74 sender:75.17.117.32
+48.8.63.88: Transmission from: 70.121.111.113 receiver: 41.32.115.74 sender:75.17.117.32
+101.18.114.55: Transmission from: 48.8.63.88 receiver: 41.32.115.74 sender:75.17.117.32
+125.107.105.73: Transmission from: 101.18.114.55 receiver: 41.32.115.74 sender:75.17.117.32
+41.32.115.74: Received message from: 75.17.117.32
+11.64.104.41: Leaf Node Deleted: 112.40.81.107
+125.107.105.73: Leaf Node Deleted: 11.64.104.41
+1.116.122.104: Sending message to: 4.102.121.23
+101.18.114.55: Transmission from: 1.116.122.104 receiver: 4.102.121.23 sender:1.116.122.104
+125.107.105.73: Transmission from: 101.18.114.55 receiver: 4.102.121.23 sender:1.116.122.104
+41.32.115.74: Transmission from: 125.107.105.73 receiver: 4.102.121.23 sender:1.116.122.104
+33.108.124.5: Transmission from: 41.32.115.74 receiver: 4.102.121.23 sender:1.116.122.104
+4.102.121.23: Received message from: 1.116.122.104
+101.18.114.55: Leaf Node Deleted: 1.116.122.104
+29.16.99.29: Sending message to: 48.8.63.88
+33.108.124.5: Transmission from: 29.16.99.29 receiver: 48.8.63.88 sender:29.16.99.29
+41.32.115.74: Transmission from: 33.108.124.5 receiver: 48.8.63.88 sender:29.16.99.29
+125.107.105.73: Transmission from: 41.32.115.74 receiver: 48.8.63.88 sender:29.16.99.29
+101.18.114.55: Transmission from: 125.107.105.73 receiver: 48.8.63.88 sender:29.16.99.29
+48.8.63.88: Received message from: 29.16.99.29
+41.32.115.74: Sending message to: 33.108.124.5
+33.108.124.5: Received message from: 41.32.115.74
+75.17.117.32: Sending message to: 97.37.9.100
+97.37.9.100: Received message from: 75.17.117.32
+48.8.63.88: Sending message to: 6.8.64.115
+59.116.46.123: Transmission from: 48.8.63.88 receiver: 6.8.64.115 sender:48.8.63.88
+6.8.64.115: Received message from: 48.8.63.88
+33.108.124.5: Sending message to: 4.102.121.23
+4.102.121.23: Received message from: 33.108.124.5
+99.100.72.80: Sending message to: 29.16.99.29
+97.37.9.100: Transmission from: 99.100.72.80 receiver: 29.16.99.29 sender:99.100.72.80
+75.17.117.32: Transmission from: 97.37.9.100 receiver: 29.16.99.29 sender:99.100.72.80
+70.121.111.113: Transmission from: 75.17.117.32 receiver: 29.16.99.29 sender:99.100.72.80
+48.8.63.88: Transmission from: 70.121.111.113 receiver: 29.16.99.29 sender:99.100.72.80
+101.18.114.55: Transmission from: 48.8.63.88 receiver: 29.16.99.29 sender:99.100.72.80
+125.107.105.73: Transmission from: 101.18.114.55 receiver: 29.16.99.29 sender:99.100.72.80
+41.32.115.74: Transmission from: 125.107.105.73 receiver: 29.16.99.29 sender:99.100.72.80
+33.108.124.5: Transmission from: 41.32.115.74 receiver: 29.16.99.29 sender:99.100.72.80
+29.16.99.29: Received message from: 99.100.72.80
+99.100.72.80: Sending message to: 50.82.104.15
+97.37.9.100: Transmission from: 99.100.72.80 receiver: 50.82.104.15 sender:99.100.72.80
+75.17.117.32: Transmission from: 97.37.9.100 receiver: 50.82.104.15 sender:99.100.72.80
+70.121.111.113: Transmission from: 75.17.117.32 receiver: 50.82.104.15 sender:99.100.72.80
+48.8.63.88: Transmission from: 70.121.111.113 receiver: 50.82.104.15 sender:99.100.72.80
+59.116.46.123: Transmission from: 48.8.63.88 receiver: 50.82.104.15 sender:99.100.72.80
+50.82.104.15: Received message from: 99.100.72.80
+99.100.72.80: Sending message to: 125.107.105.73
+97.37.9.100: Transmission from: 99.100.72.80 receiver: 125.107.105.73 sender:99.100.72.80
+75.17.117.32: Transmission from: 97.37.9.100 receiver: 125.107.105.73 sender:99.100.72.80
+70.121.111.113: Transmission from: 75.17.117.32 receiver: 125.107.105.73 sender:99.100.72.80
+48.8.63.88: Transmission from: 70.121.111.113 receiver: 125.107.105.73 sender:99.100.72.80
+101.18.114.55: Transmission from: 48.8.63.88 receiver: 125.107.105.73 sender:99.100.72.80
+125.107.105.73: Received message from: 99.100.72.80
+41.32.115.74: Sending message to: 48.8.63.88
+125.107.105.73: Transmission from: 41.32.115.74 receiver: 48.8.63.88 sender:41.32.115.74
+101.18.114.55: Transmission from: 125.107.105.73 receiver: 48.8.63.88 sender:41.32.115.74
+48.8.63.88: Received message from: 41.32.115.74
+59.116.46.123: Sending message to: 99.100.72.80
+48.8.63.88: Transmission from: 59.116.46.123 receiver: 99.100.72.80 sender:59.116.46.123
+70.121.111.113: Transmission from: 48.8.63.88 receiver: 99.100.72.80 sender:59.116.46.123
+75.17.117.32: Transmission from: 70.121.111.113 receiver: 99.100.72.80 sender:59.116.46.123
+97.37.9.100: Transmission from: 75.17.117.32 receiver: 99.100.72.80 sender:59.116.46.123
+99.100.72.80: Received message from: 59.116.46.123

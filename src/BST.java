@@ -5,9 +5,12 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.function.Consumer;
 
-class BST implements TreeInterface {
+public class BST implements TreeInterface {
 
     private BinaryNode<String> root_ = null;
+    /***
+     * Using methods map
+     */
     private Map<String, Consumer<Vector<String>>> methodsWithNoReturns = new HashMap<>();
     private Vector<String> logOutput = new Vector<>();
     public BST(BinaryNode<String> root)
@@ -17,11 +20,21 @@ class BST implements TreeInterface {
         methodsWithNoReturns.put("DELETE", (k) -> this.removeNode(k.get(0)));
         methodsWithNoReturns.put("SEND", (k) -> this.sendMessage(k.get(0), k.get(1)));
     }
+    /***
+     * addNode uses recursive add node function to add.
+     * @param element
+     */
     @Override
     public void addNode(String element)
     {
         root_ = addNodeRecursive(element, root_);
     }
+    /***
+     * Send Message Function which uses recursivity to create
+     * Paths with different methods from sender to reciever.
+     * @param fromElement
+     * @param toElement
+     */
     @Override
     public void sendMessage(String fromElement, String toElement) {
         logOutput.add(fromElement+ ": Sending message to: " + toElement);
@@ -29,38 +42,53 @@ class BST implements TreeInterface {
         Vector<BinaryNode<String>> pathToReceiver = new Vector<>();
         findMessageSender(fromElement, root_, pathToSender);
         findMessageReceiver(fromElement ,toElement, root_, pathToReceiver);
-        for(int i = pathToSender.size() - 1; i >= 0 ; i--){
-            if(i-1 < pathToReceiver.size()){
-                logOutput.add(pathToSender.get(i).getElement() + ": Transmission from: " + toElement +" receiver: "+ toElement + " sender:" + fromElement);
+        for(int i = pathToSender.size() - 1 ; i >= 0 ; i--){
+            if(i == pathToSender.size() - 1){
+                logOutput.add(pathToSender.get(i).getElement() + ": Transmission from: " + fromElement +" receiver: "+ toElement + " sender:" + fromElement);
             }
-            else{
-                logOutput.add(pathToSender.get(i).getElement() + ": Transmission from: " + pathToSender.get(i-1).getElement() +" receiver: "+ toElement + " sender:" + fromElement);
+            if(i - 1 >= 0){
+                logOutput.add(pathToSender.get(i - 1).getElement() + ": Transmission from: " + pathToSender.get(i).getElement()  +" receiver: "+ toElement + " sender:" + fromElement);
             }
-               }
-        for (int i = 0; i < pathToReceiver.size(); i++) {
-            if(pathToReceiver.size() < i+1){
-                logOutput.add(pathToReceiver.get(i).getElement() + ": Transmission from: " + pathToReceiver.get(i + 1).getElement() + " receiver: " + toElement   + " sender:" +fromElement );
+       }
+        for (int i = 0; i < pathToReceiver.size() ; i++) {
+            if(i+1 != pathToReceiver.size()){
+                logOutput.add(pathToReceiver.get(i + 1).getElement() + ": Transmission from: " + pathToReceiver.get(i).getElement() + " receiver: " + toElement   + " sender:" +fromElement );
             }
-            else{
-                logOutput.add(pathToReceiver.get(i).getElement() + ": Transmission from: " + toElement + " receiver: " + toElement   + " sender:" +fromElement );
-            }
-        }
+       }
         logOutput.add(toElement + ": Received message from: " +fromElement);
     }
+
+    /***
+     * removeNode uses recursive remove node function to remove.
+     * @param element
+     */
     @Override
     public void removeNode(String element)
     {
         root_ = removeNodeRecursive(element, root_);
     }
+
+    /***
+     * Create Logfile to output path.
+     * @param outputPath
+     * @throws IOException
+     */
     @Override
-    public void printLogsToTerminal() throws IOException
+    public void printLogsToTerminal(String outputPath) throws IOException
     {
-        FileWriter writer = new FileWriter("output.txt");
+        FileWriter writer = new FileWriter(outputPath + "_bst.txt");
         for(var log : logOutput){
             writer.write(log + "\n");
         }
         writer.close();
     }
+
+    /**
+     * Recursive method to insert into a subtree. Implemented based on PS.
+     * @param element the item to insert.
+     * @param parent the node that roots the subtree.
+     * @return the new root of the subtree.
+     */
     private BinaryNode<String> addNodeRecursive(String element, BinaryNode<String> parent)
     {
         if( parent == null )
@@ -80,12 +108,18 @@ class BST implements TreeInterface {
         return parent;
     }
 
+    /**
+     * Recursive method to remove a node from a subtree. Implemented based on PS.
+     * @param element the item to delete.
+     * @param parent the node that roots the subtree.
+     * @return the new root of the subtree.
+     */
     private BinaryNode<String> removeNodeRecursive(String element, BinaryNode<String> parent)
     {
+        logRemovedElementWithLeafInfo(parent, element);
         if( parent == null )
             return parent;
         int compareResult = element.compareTo(parent.getElement());
-        logRemovedElementWithLeafInfo(parent, element);
         if( compareResult < 0 )
             parent.setLeftNode(removeNodeRecursive(element, parent.getLeftNode()));
         else if( compareResult > 0 )
@@ -99,6 +133,12 @@ class BST implements TreeInterface {
             parent = ( parent.getLeftNode() != null ) ? parent.getLeftNode() : parent.getRightNode();
         return parent;
     }
+
+    /***
+     * Create logs with leaf information for the deleted node.
+     * @param binaryNode
+     * @param element
+     */
     private void logRemovedElementWithLeafInfo(BinaryNode<String> binaryNode, String element)
     {
         BinaryNode<String> toBeRemovedElement;
@@ -107,8 +147,19 @@ class BST implements TreeInterface {
            if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
                logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + element);
            }
-           else if(toBeRemovedElement.getLeftNode() == null || toBeRemovedElement.getRightNode() == null){
+           else if(toBeRemovedElement.getLeftNode() != null && toBeRemovedElement.getRightNode() == null){
                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
+           }
+           else if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() != null){
+               logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
+           }
+           else{
+               if(toBeRemovedElement.getRightNode().getLeftNode() != null){
+                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
+               }
+               else{
+                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
+               }
            }
         }
         else if(binaryNode.getRightNode() != null && binaryNode.getRightNode().getElement().equals(element)){
@@ -116,14 +167,28 @@ class BST implements TreeInterface {
             if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
                 logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + element);
             }
-            else if(toBeRemovedElement.getLeftNode() == null || toBeRemovedElement.getRightNode() == null){
+            else if(toBeRemovedElement.getLeftNode() != null && toBeRemovedElement.getRightNode() == null){
+                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
+            }
+            else if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() != null){
                 logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
             }
             else{
-                logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
+                if(toBeRemovedElement.getRightNode().getLeftNode() != null){
+                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
+                }
+                else{
+                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
+                }
             }
         }
     }
+
+    /***
+     * Returns minimum of tree.
+     * @param parent
+     * @return AVLNode<String>
+     */
     private BinaryNode<String> findMinRecursive( BinaryNode<String> parent)
     {
         if( parent == null )
@@ -132,6 +197,14 @@ class BST implements TreeInterface {
             return parent;
         return findMinRecursive(parent.getLeftNode());
     }
+    /***
+     * Finding sender from root recursively.
+     * Adds the path to the vector pathToSender
+     * @param element
+     * @param parent
+     * @param pathToSender
+     * @return AVLNode<String>
+     */
     private BinaryNode<String> findMessageSender( String element, BinaryNode<String> parent, Vector<BinaryNode<String>> pathToSender)
     {
         if( parent == null)
@@ -139,7 +212,7 @@ class BST implements TreeInterface {
         if(parent.getElement().equals(element))
             return parent;
         else
-            if(!(element.equals(root_.getElement()))) {
+            if(!element.equals(parent.getElement())){
                 pathToSender.add(parent);
             }
             int compareResult = element.compareTo(parent.getElement());
@@ -150,6 +223,14 @@ class BST implements TreeInterface {
             findMessageSender(element ,parent, pathToSender);
             return null;
     }
+    /***
+     * Finding reciever from root recursively.
+     * Adds the path to the vector pathToReciever
+     * @param fromElement
+     * @param parent
+     * @param pathToReceiver
+     * @return AVLNode<String>
+     */
     private BinaryNode<String> findMessageReceiver(String fromElement,String element, BinaryNode<String> parent, Vector<BinaryNode<String>> pathToReceiver)
     {
         if( parent == null)
@@ -157,9 +238,7 @@ class BST implements TreeInterface {
         if(parent.getElement().equals(element))
             return parent;
         else
-            if(!(fromElement.equals(root_.getElement()))){
-                pathToReceiver.add(parent);
-            }
+            pathToReceiver.add(parent);
             int compareResult = element.compareTo(parent.getElement());
             if( compareResult < 0 )
                 parent = parent.getLeftNode();
@@ -169,6 +248,10 @@ class BST implements TreeInterface {
         return null;
     }
 
+    /***
+     * Make Operations in the map based on inputs.
+     * @param input
+     */
     public void MakeOperation(String[] input)
     {
         Vector<String> listOfParameters = new Vector<String>();

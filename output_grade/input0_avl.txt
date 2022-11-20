@@ -1,0 +1,140 @@
+42.105.64.11: New node being added with IP:73.28.11.28
+42.105.64.11: New node being added with IP:51.41.88.77
+73.28.11.28: New node being added with IP:51.41.88.77
+Rebalancing: right-left rotation
+51.41.88.77: New node being added with IP:68.108.19.91
+73.28.11.28: New node being added with IP:68.108.19.91
+51.41.88.77: New node being added with IP:54.32.28.78
+73.28.11.28: New node being added with IP:54.32.28.78
+68.108.19.91: New node being added with IP:54.32.28.78
+Rebalancing: right rotation
+51.41.88.77: New node being added with IP:45.22.44.112
+42.105.64.11: New node being added with IP:45.22.44.112
+51.41.88.77: New node being added with IP:50.100.51.73
+42.105.64.11: New node being added with IP:50.100.51.73
+45.22.44.112: New node being added with IP:50.100.51.73
+Rebalancing: left rotation
+51.41.88.77: New node being added with IP:108.2.13.69
+45.22.44.112: New node being added with IP:108.2.13.69
+42.105.64.11: New node being added with IP:108.2.13.69
+51.41.88.77: New node being added with IP:102.124.48.122
+45.22.44.112: New node being added with IP:102.124.48.122
+42.105.64.11: New node being added with IP:102.124.48.122
+108.2.13.69: New node being added with IP:102.124.48.122
+Rebalancing: right rotation
+51.41.88.77: New node being added with IP:25.80.91.50
+45.22.44.112: New node being added with IP:25.80.91.50
+108.2.13.69: New node being added with IP:25.80.91.50
+42.105.64.11: New node being added with IP:25.80.91.50
+Rebalancing: left-right rotation
+51.41.88.77: New node being added with IP:55.112.44.92
+68.108.19.91: New node being added with IP:55.112.44.92
+54.32.28.78: New node being added with IP:55.112.44.92
+51.41.88.77: New node being added with IP:94.65.29.65
+68.108.19.91: New node being added with IP:94.65.29.65
+73.28.11.28: New node being added with IP:94.65.29.65
+51.41.88.77: New node being added with IP:6.41.38.60
+68.108.19.91: New node being added with IP:6.41.38.60
+54.32.28.78: New node being added with IP:6.41.38.60
+55.112.44.92: New node being added with IP:6.41.38.60
+Rebalancing: left rotation
+51.41.88.77: New node being added with IP:54.71.90.6
+68.108.19.91: New node being added with IP:54.71.90.6
+55.112.44.92: New node being added with IP:54.71.90.6
+54.32.28.78: New node being added with IP:54.71.90.6
+51.41.88.77: New node being added with IP:27.69.43.38
+42.105.64.11: New node being added with IP:27.69.43.38
+108.2.13.69: New node being added with IP:27.69.43.38
+25.80.91.50: New node being added with IP:27.69.43.38
+51.41.88.77: New node being added with IP:3.77.80.15
+42.105.64.11: New node being added with IP:3.77.80.15
+108.2.13.69: New node being added with IP:3.77.80.15
+25.80.91.50: New node being added with IP:3.77.80.15
+27.69.43.38: New node being added with IP:3.77.80.15
+Rebalancing: left rotation
+51.41.88.77: New node being added with IP:53.5.119.45
+68.108.19.91: New node being added with IP:53.5.119.45
+55.112.44.92: New node being added with IP:53.5.119.45
+54.32.28.78: New node being added with IP:53.5.119.45
+51.41.88.77: New node being added with IP:43.91.111.4
+42.105.64.11: New node being added with IP:43.91.111.4
+45.22.44.112: New node being added with IP:43.91.111.4
+51.41.88.77: New node being added with IP:18.9.111.49
+42.105.64.11: New node being added with IP:18.9.111.49
+108.2.13.69: New node being added with IP:18.9.111.49
+27.69.43.38: New node being added with IP:18.9.111.49
+25.80.91.50: New node being added with IP:18.9.111.49
+Rebalancing: right-left rotation
+51.41.88.77: New node being added with IP:83.60.125.47
+68.108.19.91: New node being added with IP:83.60.125.47
+73.28.11.28: New node being added with IP:83.60.125.47
+94.65.29.65: New node being added with IP:83.60.125.47
+Rebalancing: right-left rotation
+55.112.44.92: Sending message to: 3.77.80.15
+68.108.19.91: Transmission from: 55.112.44.92 receiver: 3.77.80.15 sender:55.112.44.92
+51.41.88.77: Transmission from: 68.108.19.91 receiver: 3.77.80.15 sender:55.112.44.92
+42.105.64.11: Transmission from: 51.41.88.77 receiver: 3.77.80.15 sender:55.112.44.92
+25.80.91.50: Transmission from: 42.105.64.11 receiver: 3.77.80.15 sender:55.112.44.92
+27.69.43.38: Transmission from: 25.80.91.50 receiver: 3.77.80.15 sender:55.112.44.92
+3.77.80.15: Received message from: 55.112.44.92
+25.80.91.50: Non Leaf Node Deleted; removed: 108.2.13.69 replaced: 18.9.111.49
+25.80.91.50: Node with single child Deleted: 27.69.43.38
+55.112.44.92: Leaf Node Deleted: 6.41.38.60
+Rebalancing: right rotation
+68.108.19.91: Non Leaf Node Deleted; removed: 83.60.125.47 replaced: 94.65.29.65
+94.65.29.65: Leaf Node Deleted: 73.28.11.28
+Rebalancing: left-right rotation
+42.105.64.11: Non Leaf Node Deleted; removed: 25.80.91.50 replaced: 3.77.80.15
+Rebalancing: right rotation
+54.71.90.6: Sending message to: 45.22.44.112
+54.32.28.78: Transmission from: 54.71.90.6 receiver: 45.22.44.112 sender:54.71.90.6
+55.112.44.92: Transmission from: 54.32.28.78 receiver: 45.22.44.112 sender:54.71.90.6
+51.41.88.77: Transmission from: 55.112.44.92 receiver: 45.22.44.112 sender:54.71.90.6
+42.105.64.11: Transmission from: 51.41.88.77 receiver: 45.22.44.112 sender:54.71.90.6
+45.22.44.112: Received message from: 54.71.90.6
+55.112.44.92: Non Leaf Node Deleted; removed: 54.32.28.78 replaced: 54.71.90.6
+68.108.19.91: Leaf Node Deleted: 94.65.29.65
+45.22.44.112: Sending message to: 55.112.44.92
+42.105.64.11: Transmission from: 45.22.44.112 receiver: 55.112.44.92 sender:45.22.44.112
+51.41.88.77: Transmission from: 42.105.64.11 receiver: 55.112.44.92 sender:45.22.44.112
+55.112.44.92: Received message from: 45.22.44.112
+102.124.48.122: Sending message to: 43.91.111.4
+18.9.111.49: Transmission from: 102.124.48.122 receiver: 43.91.111.4 sender:102.124.48.122
+42.105.64.11: Transmission from: 18.9.111.49 receiver: 43.91.111.4 sender:102.124.48.122
+45.22.44.112: Transmission from: 42.105.64.11 receiver: 43.91.111.4 sender:102.124.48.122
+43.91.111.4: Received message from: 102.124.48.122
+102.124.48.122: Sending message to: 54.71.90.6
+18.9.111.49: Transmission from: 102.124.48.122 receiver: 54.71.90.6 sender:102.124.48.122
+42.105.64.11: Transmission from: 18.9.111.49 receiver: 54.71.90.6 sender:102.124.48.122
+51.41.88.77: Transmission from: 42.105.64.11 receiver: 54.71.90.6 sender:102.124.48.122
+55.112.44.92: Transmission from: 51.41.88.77 receiver: 54.71.90.6 sender:102.124.48.122
+54.71.90.6: Received message from: 102.124.48.122
+54.71.90.6: Sending message to: 68.108.19.91
+55.112.44.92: Transmission from: 54.71.90.6 receiver: 68.108.19.91 sender:54.71.90.6
+68.108.19.91: Received message from: 54.71.90.6
+43.91.111.4: Sending message to: 53.5.119.45
+45.22.44.112: Transmission from: 43.91.111.4 receiver: 53.5.119.45 sender:43.91.111.4
+42.105.64.11: Transmission from: 45.22.44.112 receiver: 53.5.119.45 sender:43.91.111.4
+51.41.88.77: Transmission from: 42.105.64.11 receiver: 53.5.119.45 sender:43.91.111.4
+55.112.44.92: Transmission from: 51.41.88.77 receiver: 53.5.119.45 sender:43.91.111.4
+54.71.90.6: Transmission from: 55.112.44.92 receiver: 53.5.119.45 sender:43.91.111.4
+53.5.119.45: Received message from: 43.91.111.4
+18.9.111.49: Sending message to: 55.112.44.92
+42.105.64.11: Transmission from: 18.9.111.49 receiver: 55.112.44.92 sender:18.9.111.49
+51.41.88.77: Transmission from: 42.105.64.11 receiver: 55.112.44.92 sender:18.9.111.49
+55.112.44.92: Received message from: 18.9.111.49
+3.77.80.15: Sending message to: 51.41.88.77
+18.9.111.49: Transmission from: 3.77.80.15 receiver: 51.41.88.77 sender:3.77.80.15
+42.105.64.11: Transmission from: 18.9.111.49 receiver: 51.41.88.77 sender:3.77.80.15
+51.41.88.77: Received message from: 3.77.80.15
+55.112.44.92: Sending message to: 68.108.19.91
+68.108.19.91: Received message from: 55.112.44.92
+53.5.119.45: Sending message to: 51.41.88.77
+54.71.90.6: Transmission from: 53.5.119.45 receiver: 51.41.88.77 sender:53.5.119.45
+55.112.44.92: Transmission from: 54.71.90.6 receiver: 51.41.88.77 sender:53.5.119.45
+51.41.88.77: Received message from: 53.5.119.45
+54.71.90.6: Sending message to: 45.22.44.112
+55.112.44.92: Transmission from: 54.71.90.6 receiver: 45.22.44.112 sender:54.71.90.6
+51.41.88.77: Transmission from: 55.112.44.92 receiver: 45.22.44.112 sender:54.71.90.6
+42.105.64.11: Transmission from: 51.41.88.77 receiver: 45.22.44.112 sender:54.71.90.6
+45.22.44.112: Received message from: 54.71.90.6

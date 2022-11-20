@@ -1,35 +1,27 @@
 import java.io.IOException;
-import java.util.HashMap;
-
-
-
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        //Deserialize inputs.
         var inputDeserializer = new InputDeserializer(args[0]);
         var inputs = inputDeserializer.getInputs();
-        var BST = new BST(new BinaryNode(inputs.get(0)[0]));
+        //Create BST with root.
+        var BST = new BST(new BinaryNode<String>(inputs.get(0)[0]));
+        //MakeOperations with BST
         for(int i = 1; i < inputs.size() ; i++){
             BST.MakeOperation(inputs.get(i));
         }
-        BST.printLogsToTerminal();
+        //Create Output File BST.
+        BST.printLogsToTerminal(args[1]);
 
-
-
-
-//HashMap<String, TreeInterface> hashMap = new HashMap<>();
-
-
-//        hashMap.put("BST", new BST());
-//        hashMap.put("AVL", new AVL());
-//
-//        hashMap.get(args[0]).addNode();
-//        hashMap.get(args[0]).removeNode();
-//        hashMap.get(args[0]).sendMessage();
-//        hashMap.get(args[0]).addNode();
-//        hashMap.get(args[0]).removeNode();
-//
-//        hashMap.get(args[0]).printLogsToTerminal();
+        //Create AVL Tree with root.
+        var AVL = new AVL(new AVLNode<String>(inputs.get(0)[0]));
+        //MakeOperations with AVL
+        for(int i = 1; i < inputs.size() ; i++){
+            AVL.MakeOperation(inputs.get(i));
+        }
+        //Create Output File AVL.
+        AVL.printLogsToTerminal(args[1]);
     }
 
 }

@@ -8,7 +8,11 @@ import java.util.Vector;
 
 public class InputDeserializer {
 
-    InputDeserializer(String filePath){
+    /***
+     * Takes inputFile as input and read all lines in it. During reading, it sets an array [] and holds inputs as String[] in vector
+     * @param filePath
+     */
+    public InputDeserializer(String filePath){
         inputs = new Vector<String[]>();
         List<String> listOfOperations = Collections.emptyList();
         try{
@@ -21,6 +25,11 @@ public class InputDeserializer {
             this.inputs.add(operation.split("\\s"));
         }
     }
+
+    /***
+     * gets the inputs which are constructed.
+     * @return vector of the inputs.
+     */
     public Vector<String[]> getInputs(){
         return inputs;
     }
