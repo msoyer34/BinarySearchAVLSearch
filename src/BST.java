@@ -1,3 +1,5 @@
+import org.w3c.dom.Node;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,6 +9,12 @@ import java.util.function.Consumer;
 
 public class BST implements TreeInterface {
 
+    private enum NodeType{
+        LeafNode,
+        NonLeafNode,
+        SingleChildNode,
+        None
+    }
     private BinaryNode<String> root_ = null;
     /***
      * Using methods map
@@ -116,14 +124,17 @@ public class BST implements TreeInterface {
      */
     private BinaryNode<String> removeNodeRecursive(String element, BinaryNode<String> parent)
     {
-        logRemovedElementWithLeafInfo(parent, element);
         if( parent == null )
             return parent;
         int compareResult = element.compareTo(parent.getElement());
-        if( compareResult < 0 )
+        if( compareResult < 0 ){
+            logRemovedElementWithLeafInfo(parent, element);
             parent.setLeftNode(removeNodeRecursive(element, parent.getLeftNode()));
-        else if( compareResult > 0 )
-            parent.setRightNode(removeNodeRecursive( element, parent.getRightNode()));
+        }
+        else if( compareResult > 0 ){
+            logRemovedElementWithLeafInfo(parent, element);
+            parent.setRightNode(removeNodeRecursive(element, parent.getRightNode()));
+        }
         else if( parent.getLeftNode() != null && parent.getRightNode() != null )
         {
             parent.setElement(findMinRecursive(parent.getRightNode()).getElement());
@@ -133,7 +144,7 @@ public class BST implements TreeInterface {
             parent = ( parent.getLeftNode() != null ) ? parent.getLeftNode() : parent.getRightNode();
         return parent;
     }
-
+    private boolean IsLogCreated = false;
     /***
      * Create logs with leaf information for the deleted node.
      * @param binaryNode
@@ -142,48 +153,105 @@ public class BST implements TreeInterface {
     private void logRemovedElementWithLeafInfo(BinaryNode<String> binaryNode, String element)
     {
         BinaryNode<String> toBeRemovedElement;
-        if(binaryNode.getLeftNode() != null && binaryNode.getLeftNode().getElement().equals(element)){
+        if(checkIsLeft(binaryNode, element)){
             toBeRemovedElement = binaryNode.getLeftNode();
-           if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
-               logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + element);
-           }
-           else if(toBeRemovedElement.getLeftNode() != null && toBeRemovedElement.getRightNode() == null){
-               logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
-           }
-           else if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() != null){
-               logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
-           }
-           else{
-               if(toBeRemovedElement.getRightNode().getLeftNode() != null){
-                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
-               }
-               else{
-                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
-               }
-           }
+            IsLogCreated = CreateLog(binaryNode, toBeRemovedElement);
         }
-        else if(binaryNode.getRightNode() != null && binaryNode.getRightNode().getElement().equals(element)){
+        else if(checkIsRight(binaryNode, element)){
             toBeRemovedElement = binaryNode.getRightNode();
-            if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
-                logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + element);
-            }
-            else if(toBeRemovedElement.getLeftNode() != null && toBeRemovedElement.getRightNode() == null){
-                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
-            }
-            else if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() != null){
-                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
-            }
-            else{
-                if(toBeRemovedElement.getRightNode().getLeftNode() != null){
-                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
-                }
-                else{
-                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
-                }
-            }
+            IsLogCreated = CreateLog(binaryNode, toBeRemovedElement);
         }
+//        if(binaryNode.getLeftNode() != null && binaryNode.getLeftNode().getElement().equals(element)){
+//            toBeRemovedElement = binaryNode.getLeftNode();
+//           if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
+//               logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + element);
+//           }
+//           else if(toBeRemovedElement.getLeftNode() != null && toBeRemovedElement.getRightNode() == null){
+//               logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
+//           }
+//           else if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() != null){
+//               logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
+//           }
+//           else{
+//               if(toBeRemovedElement.getRightNode().getLeftNode() != null){
+//                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
+//               }
+//               else{
+//                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
+//               }
+//           }
+//        }
+//        else if(binaryNode.getRightNode() != null && binaryNode.getRightNode().getElement().equals(element)){
+//            toBeRemovedElement = binaryNode.getRightNode();
+//            if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
+//                logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + element);
+//            }
+//            else if(toBeRemovedElement.getLeftNode() != null && toBeRemovedElement.getRightNode() == null){
+//                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
+//            }
+//            else if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() != null){
+//                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
+//            }
+//            else{
+//                if(toBeRemovedElement.getRightNode().getLeftNode() != null){
+//                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
+//                }
+//                else{
+//                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
+//                }
+//            }
+//        }
     }
 
+    private boolean CreateLog(BinaryNode<String> binaryNode, BinaryNode<String> toBeRemovedElement) {
+        var nodeType = returnNodeType(toBeRemovedElement);
+        switch (nodeType){
+            case None :
+                return false;
+            case LeafNode:
+                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + toBeRemovedElement.getElement() );
+                return true;
+            case NonLeafNode:
+               if(toBeRemovedElement.getRightNode().getLeftNode() != null){
+                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ toBeRemovedElement.getElement()  +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
+               }
+               else{
+                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ toBeRemovedElement.getElement()  +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
+               }
+               return true;
+           }
+           return false;
+    }
+
+    private boolean checkIsLeft(BinaryNode<String> node, String element){
+        if(node.getLeftNode() != null && node.getLeftNode().getElement().equals(element)){
+            return true;
+        }
+        return false;
+    }
+    private boolean checkIsRight(BinaryNode<String> node, String element){
+        if(node.getRightNode() != null && node.getRightNode().getElement().equals(element)){
+            return true;
+        }
+        return false;
+    }
+    private NodeType returnNodeType(BinaryNode<String> node){
+        if(node.getLeftNode() == null && node.getRightNode() == null){
+            return NodeType.LeafNode;
+        }
+        else if(node.getLeftNode() != null && node.getRightNode() == null){
+            return NodeType.SingleChildNode;
+        }
+        else if(node.getLeftNode() == null && node.getRightNode() != null){
+            return NodeType.SingleChildNode;
+        }
+        else if(node.getLeftNode() != null && node.getRightNode() != null){
+            return NodeType.NonLeafNode;
+        }
+        else{
+            return NodeType.None;
+        }
+    }
     /***
      * Returns minimum of tree.
      * @param parent
