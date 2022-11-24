@@ -2,6 +2,7 @@ import org.w3c.dom.Node;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -9,19 +10,14 @@ import java.util.function.Consumer;
 
 public class BST implements TreeInterface {
 
-    private enum NodeType{
-        LeafNode,
-        NonLeafNode,
-        SingleChildNode,
-        None
-    }
-    private BinaryNode<String> root_ = null;
+    public String toBeRemovedElement;
+    private BaseNode<String> root_ = null;
     /***
      * Using methods map
      */
     private Map<String, Consumer<Vector<String>>> methodsWithNoReturns = new HashMap<>();
     private Vector<String> logOutput = new Vector<>();
-    public BST(BinaryNode<String> root)
+    public BST(BaseNode<String> root)
     {
         root_ = root;
         methodsWithNoReturns.put("ADDNODE", (k) -> this.addNode(k.get(0)));
@@ -46,26 +42,37 @@ public class BST implements TreeInterface {
     @Override
     public void sendMessage(String fromElement, String toElement) {
         logOutput.add(fromElement+ ": Sending message to: " + toElement);
-        Vector<BinaryNode<String>> pathToSender = new Vector<>();
-        Vector<BinaryNode<String>> pathToReceiver = new Vector<>();
-        findMessageSender(fromElement, root_, pathToSender);
-        findMessageReceiver(fromElement ,toElement, root_, pathToReceiver);
-        for(int i = pathToSender.size() - 1 ; i >= 0 ; i--){
-            if(i == pathToSender.size() - 1){
-                logOutput.add(pathToSender.get(i).getElement() + ": Transmission from: " + fromElement +" receiver: "+ toElement + " sender:" + fromElement);
+        Vector<BaseNode<String>> pathToSender = new Vector<>();
+        Vector<BaseNode<String>> pathToReceiver = new Vector<>();
+        Vector<BaseNode<String>> merged = new Vector<>();
+        //merged.addAll(Collections.reverse(pathToSender));
+        findMessageSender(fromElement, lowestCommonAncestor(fromElement, toElement), pathToSender);
+        findMessageReceiver(fromElement ,toElement, lowestCommonAncestor(fromElement, toElement), pathToReceiver);
+        if(pathToReceiver.size() > 1){
+            var tomerge = pathToReceiver.subList(1, pathToReceiver.size());
+            Collections.reverse(tomerge);
+            merged.addAll(tomerge);
+        }
+        if(pathToSender.size() > 0){
+            //Collections.reverse(pathToSender);
+            merged.addAll(pathToSender);
+        }
+        int size = merged.size() - 1;
+        while(size >= 0){
+            if(size == merged.size() - 1){
+                if(!merged.get(size).getElement().equals(toElement) && !merged.get(size).getElement().equals(fromElement)){
+                logOutput.add(merged.get(size).getElement() + ": Transmission from: " + fromElement + " receiver: " + toElement +" sender:" + fromElement);
+                }
             }
-            if(i - 1 >= 0){
-                logOutput.add(pathToSender.get(i - 1).getElement() + ": Transmission from: " + pathToSender.get(i).getElement()  +" receiver: "+ toElement + " sender:" + fromElement);
-            }
-       }
-        for (int i = 0; i < pathToReceiver.size() ; i++) {
-            if(i+1 != pathToReceiver.size()){
-                logOutput.add(pathToReceiver.get(i + 1).getElement() + ": Transmission from: " + pathToReceiver.get(i).getElement() + " receiver: " + toElement   + " sender:" +fromElement );
-            }
-       }
-        logOutput.add(toElement + ": Received message from: " +fromElement);
+            else{
+                if(!merged.get(size).getElement().equals(toElement) && !merged.get(size).getElement().equals(fromElement)){
+                    logOutput.add(merged.get(size).getElement() + ": Transmission from: " + merged.get(size + 1).getElement() + " receiver: " + toElement +" sender:" + fromElement);
+                }
+}
+            size--;
+        }
+        logOutput.add(toElement + ": Received message from: " + fromElement);
     }
-
     /***
      * removeNode uses recursive remove node function to remove.
      * @param element
@@ -73,6 +80,7 @@ public class BST implements TreeInterface {
     @Override
     public void removeNode(String element)
     {
+        toBeRemovedElement = element;
         root_ = removeNodeRecursive(element, root_);
     }
 
@@ -97,10 +105,10 @@ public class BST implements TreeInterface {
      * @param parent the node that roots the subtree.
      * @return the new root of the subtree.
      */
-    private BinaryNode<String> addNodeRecursive(String element, BinaryNode<String> parent)
+    private BaseNode<String> addNodeRecursive(String element, BaseNode<String> parent)
     {
         if( parent == null )
-            return new BinaryNode<>( element, null, null );
+            return new BaseNode<>( element, null, null );
 
         int compareResult = element.compareTo(parent.getElement());
 
@@ -122,95 +130,82 @@ public class BST implements TreeInterface {
      * @param parent the node that roots the subtree.
      * @return the new root of the subtree.
      */
-    private BinaryNode<String> removeNodeRecursive(String element, BinaryNode<String> parent)
+    private BaseNode<String> removeNodeRecursive(String element, BaseNode<String> parent)
     {
         if( parent == null )
             return parent;
+
+        logRemovedElementWithLeafInfo(parent, element);
         int compareResult = element.compareTo(parent.getElement());
         if( compareResult < 0 ){
-            logRemovedElementWithLeafInfo(parent, element);
             parent.setLeftNode(removeNodeRecursive(element, parent.getLeftNode()));
         }
         else if( compareResult > 0 ){
-            logRemovedElementWithLeafInfo(parent, element);
             parent.setRightNode(removeNodeRecursive(element, parent.getRightNode()));
         }
-        else if( parent.getLeftNode() != null && parent.getRightNode() != null )
-        {
-            parent.setElement(findMinRecursive(parent.getRightNode()).getElement());
-            parent.setRightNode(removeNodeRecursive(parent.getElement(), parent.getRightNode()));
+        else {
+
+            if (parent.getLeftNode() == null) {
+                return parent.getRightNode();
+            } else if (parent.getRightNode() == null)
+                return parent.getLeftNode();
+
+            parent.setElement(inOrderSuccessor(parent.getRightNode()));
+            parent.setRightNode(removeNodeRecursive(parent.getElement(),parent.getRightNode()));
         }
-        else
-            parent = ( parent.getLeftNode() != null ) ? parent.getLeftNode() : parent.getRightNode();
         return parent;
     }
-    private boolean IsLogCreated = false;
+    private String inOrderSuccessor(BaseNode<String> root) {
+        String minimum = root.getElement();
+        while (root.getLeftNode() != null) {
+            minimum = root.getLeftNode().getElement();
+            root = root.getLeftNode();
+        }
+        return minimum;
+    }
+
+    public BaseNode<String> lowestCommonAncestor(String fromElement, String toElement){
+        BaseNode<String> node = root_;
+        while (node != null) {
+            int compareResultfromElement = node.getElement().compareTo(toElement);
+            int compareResultToElement = node.getElement().compareTo(fromElement);
+            if (compareResultfromElement > 0 && compareResultToElement > 0 ) {
+                node = node.getLeftNode();
+            } else if (compareResultfromElement < 0 && compareResultToElement < 0) {
+                node = node.getRightNode();
+            } else return node;
+        }
+        return null;
+    }
     /***
      * Create logs with leaf information for the deleted node.
      * @param binaryNode
      * @param element
      */
-    private void logRemovedElementWithLeafInfo(BinaryNode<String> binaryNode, String element)
+    private void logRemovedElementWithLeafInfo(BaseNode<String> binaryNode, String element)
     {
-        BinaryNode<String> toBeRemovedElement;
+        if(!element.equals(toBeRemovedElement)){
+            return;
+        }
+        BaseNode<String> toBeRemovedElement;
         if(checkIsLeft(binaryNode, element)){
             toBeRemovedElement = binaryNode.getLeftNode();
-            IsLogCreated = CreateLog(binaryNode, toBeRemovedElement);
+            CreateLog(binaryNode, toBeRemovedElement);
         }
         else if(checkIsRight(binaryNode, element)){
             toBeRemovedElement = binaryNode.getRightNode();
-            IsLogCreated = CreateLog(binaryNode, toBeRemovedElement);
+            CreateLog(binaryNode, toBeRemovedElement);
         }
-//        if(binaryNode.getLeftNode() != null && binaryNode.getLeftNode().getElement().equals(element)){
-//            toBeRemovedElement = binaryNode.getLeftNode();
-//           if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
-//               logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + element);
-//           }
-//           else if(toBeRemovedElement.getLeftNode() != null && toBeRemovedElement.getRightNode() == null){
-//               logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
-//           }
-//           else if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() != null){
-//               logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
-//           }
-//           else{
-//               if(toBeRemovedElement.getRightNode().getLeftNode() != null){
-//                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
-//               }
-//               else{
-//                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
-//               }
-//           }
-//        }
-//        else if(binaryNode.getRightNode() != null && binaryNode.getRightNode().getElement().equals(element)){
-//            toBeRemovedElement = binaryNode.getRightNode();
-//            if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
-//                logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + element);
-//            }
-//            else if(toBeRemovedElement.getLeftNode() != null && toBeRemovedElement.getRightNode() == null){
-//                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
-//            }
-//            else if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() != null){
-//                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + element);
-//            }
-//            else{
-//                if(toBeRemovedElement.getRightNode().getLeftNode() != null){
-//                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
-//                }
-//                else{
-//                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
-//                }
-//            }
-//        }
     }
 
-    private boolean CreateLog(BinaryNode<String> binaryNode, BinaryNode<String> toBeRemovedElement) {
+    private void CreateLog(BaseNode<String> binaryNode, BaseNode<String> toBeRemovedElement) {
         var nodeType = returnNodeType(toBeRemovedElement);
         switch (nodeType){
             case None :
-                return false;
-            case LeafNode:
+                break;
+            case SingleChildNode:
                 logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + toBeRemovedElement.getElement() );
-                return true;
+                break;
             case NonLeafNode:
                if(toBeRemovedElement.getRightNode().getLeftNode() != null){
                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ toBeRemovedElement.getElement()  +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
@@ -218,24 +213,26 @@ public class BST implements TreeInterface {
                else{
                    logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ toBeRemovedElement.getElement()  +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
                }
-               return true;
-           }
-           return false;
+               break;
+           case LeafNode:
+                logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + toBeRemovedElement.getElement() );
+                break;
+            }
     }
 
-    private boolean checkIsLeft(BinaryNode<String> node, String element){
+    private boolean checkIsLeft(BaseNode<String> node, String element){
         if(node.getLeftNode() != null && node.getLeftNode().getElement().equals(element)){
             return true;
         }
         return false;
     }
-    private boolean checkIsRight(BinaryNode<String> node, String element){
+    private boolean checkIsRight(BaseNode<String> node, String element){
         if(node.getRightNode() != null && node.getRightNode().getElement().equals(element)){
             return true;
         }
         return false;
     }
-    private NodeType returnNodeType(BinaryNode<String> node){
+    private NodeType returnNodeType(BaseNode<String> node){
         if(node.getLeftNode() == null && node.getRightNode() == null){
             return NodeType.LeafNode;
         }
@@ -253,27 +250,14 @@ public class BST implements TreeInterface {
         }
     }
     /***
-     * Returns minimum of tree.
-     * @param parent
-     * @return AVLNode<String>
-     */
-    private BinaryNode<String> findMinRecursive( BinaryNode<String> parent)
-    {
-        if( parent == null )
-            return null;
-        else if( parent.getLeftNode() == null )
-            return parent;
-        return findMinRecursive(parent.getLeftNode());
-    }
-    /***
      * Finding sender from root recursively.
      * Adds the path to the vector pathToSender
      * @param element
      * @param parent
      * @param pathToSender
-     * @return AVLNode<String>
+     * @return BaseNode<String>
      */
-    private BinaryNode<String> findMessageSender( String element, BinaryNode<String> parent, Vector<BinaryNode<String>> pathToSender)
+    private BaseNode<String> findMessageSender( String element, BaseNode<String> parent, Vector<BaseNode<String>> pathToSender)
     {
         if( parent == null)
             return null;
@@ -297,9 +281,9 @@ public class BST implements TreeInterface {
      * @param fromElement
      * @param parent
      * @param pathToReceiver
-     * @return AVLNode<String>
+     * @return BaseNode<String>
      */
-    private BinaryNode<String> findMessageReceiver(String fromElement,String element, BinaryNode<String> parent, Vector<BinaryNode<String>> pathToReceiver)
+    private BaseNode<String> findMessageReceiver(String fromElement,String element, BaseNode<String> parent, Vector<BaseNode<String>> pathToReceiver)
     {
         if( parent == null)
             return null;

@@ -1,12 +1,13 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.function.Consumer;
 
 public class AVL implements TreeInterface {
-    private AVLNode<String> root_;
+    private BaseNode<String> root_;
     /***
      * Using methods map
      */
@@ -15,7 +16,8 @@ public class AVL implements TreeInterface {
     private Vector<String> logOutput = new Vector<>();
     private boolean isRotatedLeft_ = false;
     private boolean isRotatedRight_ = false;
-    public AVL(AVLNode<String> root )
+    private String toBeRemovedElement;
+    public AVL(BaseNode<String> root )
     {
         root_ = root;
         methodsWithNoReturns.put("ADDNODE", (k) -> this.addNode(k.get(0)));
@@ -40,6 +42,7 @@ public class AVL implements TreeInterface {
     @Override
     public void removeNode(String element)
     {
+        toBeRemovedElement = element;
         root_ = removeNodeRecursive( element, root_ );
     }
     /**
@@ -48,10 +51,10 @@ public class AVL implements TreeInterface {
      * @param parent the node that roots the subtree.
      * @return the new root of the subtree.
      */
-    private AVLNode<String> addNodeRecursive( String element, AVLNode<String> parent)
+    private BaseNode<String> addNodeRecursive( String element, BaseNode<String> parent)
     {
         if( parent == null )
-            return new AVLNode<>( element, null, null );
+            return new BaseNode<String>( element, null, null );
 
         int compareResult = element.compareTo(parent.getElement());
         if(compareResult < 0){
@@ -70,7 +73,7 @@ public class AVL implements TreeInterface {
      * @param parent the node that roots the subtree.
      * @return the new root of the subtree.
      */
-    private AVLNode<String> removeNodeRecursive( String element, AVLNode<String> parent )
+    private BaseNode<String> removeNodeRecursive( String element, BaseNode<String> parent )
     {
         if( parent == null )
             return parent;
@@ -97,26 +100,51 @@ public class AVL implements TreeInterface {
      * @param toElement
      */
     @Override
-    public void sendMessage(String fromElement, String toElement)  {
+    public void sendMessage(String fromElement, String toElement) {
         logOutput.add(fromElement+ ": Sending message to: " + toElement);
-        Vector<AVLNode<String>> pathToSender = new Vector<>();
-        Vector<AVLNode<String>> pathToReceiver = new Vector<>();
-        findMessageSender(fromElement, root_, pathToSender);
-        findMessageReceiver(fromElement ,toElement, root_, pathToReceiver);
-        for(int i = pathToSender.size() - 1 ; i >= 0 ; i--){
-            if(i == pathToSender.size() - 1){
-                logOutput.add(pathToSender.get(i).getElement() + ": Transmission from: " + fromElement +" receiver: "+ toElement + " sender:" + fromElement);
-            }
-            if(i - 1 >= 0){
-                logOutput.add(pathToSender.get(i - 1).getElement() + ": Transmission from: " + pathToSender.get(i).getElement()  +" receiver: "+ toElement + " sender:" + fromElement);
-            }
+        Vector<BaseNode<String>> pathToSender = new Vector<>();
+        Vector<BaseNode<String>> pathToReceiver = new Vector<>();
+        Vector<BaseNode<String>> merged = new Vector<>();
+        //merged.addAll(Collections.reverse(pathToSender));
+        findMessageSender(fromElement, lowestCommonAncestor(fromElement, toElement), pathToSender);
+        findMessageReceiver(fromElement ,toElement, lowestCommonAncestor(fromElement, toElement), pathToReceiver);
+        if(pathToReceiver.size() > 1){
+            var tomerge = pathToReceiver.subList(1, pathToReceiver.size());
+            Collections.reverse(tomerge);
+            merged.addAll(tomerge);
         }
-        for (int i = 0; i < pathToReceiver.size() ; i++) {
-            if(i+1 != pathToReceiver.size()){
-                logOutput.add(pathToReceiver.get(i + 1).getElement() + ": Transmission from: " + pathToReceiver.get(i).getElement() + " receiver: " + toElement   + " sender:" +fromElement );
-            }
+        if(pathToSender.size() > 0){
+            //Collections.reverse(pathToSender);
+            merged.addAll(pathToSender);
         }
-        logOutput.add(toElement + ": Received message from: " +fromElement);
+        int size = merged.size() - 1;
+        while(size >= 0){
+            if(size == merged.size() - 1){
+                if(!merged.get(size).getElement().equals(toElement) && !merged.get(size).getElement().equals(fromElement)){
+                logOutput.add(merged.get(size).getElement() + ": Transmission from: " + fromElement + " receiver: " + toElement +" sender:" + fromElement);
+                }
+            }
+            else{
+                if(!merged.get(size).getElement().equals(toElement) && !merged.get(size).getElement().equals(fromElement)){
+                    logOutput.add(merged.get(size).getElement() + ": Transmission from: " + merged.get(size + 1).getElement() + " receiver: " + toElement +" sender:" + fromElement);
+                }
+}
+            size--;
+        }
+        logOutput.add(toElement + ": Received message from: " + fromElement);
+    }
+    public BaseNode<String> lowestCommonAncestor(String fromElement, String toElement){
+        BaseNode<String> node = root_;
+        while (node != null) {
+            int compareResultfromElement = node.getElement().compareTo(toElement);
+            int compareResultToElement = node.getElement().compareTo(fromElement);
+            if (compareResultfromElement > 0 && compareResultToElement > 0 ) {
+                node = node.getLeftNode();
+            } else if (compareResultfromElement < 0 && compareResultToElement < 0) {
+                node = node.getRightNode();
+            } else return node;
+        }
+        return null;
     }
 
     /***
@@ -136,9 +164,9 @@ public class AVL implements TreeInterface {
     /***
      * Returns minimum of tree. Method uses while. Recursive function also can be used.
      * @param node
-     * @return AVLNode<String>
+     * @return BaseNode<String>
      */
-    private AVLNode<String> findMin( AVLNode<String> node )
+    private BaseNode<String> findMin( BaseNode<String> node )
     {
         if( node == null )
             return node;
@@ -151,9 +179,9 @@ public class AVL implements TreeInterface {
     /***
      * Balance Function isRemoved
      * @param parent
-     * @return AVLNode<String>
+     * @return BaseNode<String>
      */
-    private AVLNode<String> balance( AVLNode<String> parent)
+    private BaseNode<String> balance( BaseNode<String> parent)
     {
         if( parent == null )
             return parent;
@@ -172,7 +200,8 @@ public class AVL implements TreeInterface {
         parent.setHeight(Math.max( height( parent.getLeftNode() ), height( parent.getRightNode() ) ) + 1);
         return parent;
     }
-
+    private boolean isrightleft_ = false;
+    private boolean isleftright_ = false;
     /***
      * Creates Log of the balance.
      * Gets rotation information and set them to default false.
@@ -186,10 +215,15 @@ public class AVL implements TreeInterface {
             logOutput.add("Rebalancing: left rotation");
 
         }
-        else if(isRotatedRight_ == true && isRotatedLeft_ == true){
+        else if(isrightleft_ == true){
+            logOutput.add("Rebalancing: left-right rotation");
+        }
+        else if(isleftright_ == true){
             logOutput.add("Rebalancing: right-left rotation");
         }
         isRotatedLeft_ = false;
+        isleftright_ = false;
+        isrightleft_ = false;
         isRotatedRight_ = false;
     }
 
@@ -199,9 +233,9 @@ public class AVL implements TreeInterface {
      * @param element
      * @param parent
      * @param pathToSender
-     * @return AVLNode<String>
+     * @return BaseNode<String>
      */
-    private AVLNode<String> findMessageSender( String element, AVLNode<String> parent, Vector<AVLNode<String>> pathToSender)
+    private BaseNode<String> findMessageSender( String element, BaseNode<String> parent, Vector<BaseNode<String>> pathToSender)
     {
         if( parent == null)
             return null;
@@ -225,9 +259,9 @@ public class AVL implements TreeInterface {
      * @param fromElement
      * @param parent
      * @param pathToReceiver
-     * @return AVLNode<String>
+     * @return BaseNode<String>
      */
-    private AVLNode<String> findMessageReceiver(String fromElement,String element, AVLNode<String> parent, Vector<AVLNode<String>> pathToReceiver)
+    private BaseNode<String> findMessageReceiver(String fromElement,String element, BaseNode<String> parent, Vector<BaseNode<String>> pathToReceiver)
     {
         if( parent == null)
             return null;
@@ -248,12 +282,12 @@ public class AVL implements TreeInterface {
      * Rotate with the left child function.
      * This is based on PS.
      * @param k2
-     * @return AVLNode<String>
+     * @return BaseNode<String>
      */
-    private AVLNode<String> rotateWithLeftChild( AVLNode<String> k2 )
+    private BaseNode<String> rotateWithLeftChild( BaseNode<String> k2 )
     {
         isRotatedLeft_ = true;
-        AVLNode<String> k1 = k2.getLeftNode();
+        BaseNode<String> k1 = k2.getLeftNode();
         k2.setLeftNode(k1.getRightNode());
         k1.setRightNode(k2);
         k2.setHeight(Math.max(height(k2.getLeftNode()), height(k2.getRightNode()) ) + 1);
@@ -266,7 +300,7 @@ public class AVL implements TreeInterface {
      * @param node
      * @return int height of the node
      */
-    private int height( AVLNode<String> node)
+    private int height( BaseNode<String> node)
     {
         return node == null ? -1 : node.getHeight();
     }
@@ -275,14 +309,14 @@ public class AVL implements TreeInterface {
      * For AVL trees, this is a single rotation for case 4.
      * Update heights, then return new root.
      */
-    private AVLNode<String> rotateWithRightChild( AVLNode<String> k1 )
+    private BaseNode<String> rotateWithRightChild( BaseNode<String> k1 )
     {
         isRotatedRight_ = true;
-        AVLNode<String> k2 = k1.getRightNode();
+        BaseNode<String> k2 = k1.getRightNode();
         k1.setRightNode(k2.getLeftNode());
         k2.setLeftNode(k1);
         k1.setHeight(Math.max( height( k1.getLeftNode() ), height( k1.getRightNode() ) ) + 1);
-        k2.setHeight(Math.max( height( k2.getRightNode() ), k1.getHeight() ) + 1);
+        k2.setHeight(Math.max( height( k2.getRightNode() ), k1.getHeight() + 1));
         return k2;
     }
 
@@ -292,13 +326,15 @@ public class AVL implements TreeInterface {
      * For AVL trees, this is a double rotation for case 2.
      * Update heights, then return new root.
      */
-    private AVLNode<String> doubleWithLeftChild( AVLNode<String> k3 )
+    private BaseNode<String> doubleWithLeftChild( BaseNode<String> k3 )
     {
+        isrightleft_ = true;
         k3.setLeftNode(rotateWithRightChild(k3.getLeftNode()));
         return rotateWithLeftChild(k3);
     }
-    private AVLNode<String> doubleWithRightChild( AVLNode<String> k1 )
+    private BaseNode<String> doubleWithRightChild( BaseNode<String> k1 )
     {
+        isleftright_ = true;
         k1.setRightNode(rotateWithLeftChild(k1.getRightNode()));
         return rotateWithRightChild(k1);
     }
@@ -315,53 +351,76 @@ public class AVL implements TreeInterface {
 
     /***
      * Create Remove Element Logs with leaf information.
-     * @param AvlNode
+     * @param 
      * @param element
      */
-    private void logRemovedElementWithLeafInfo(AVLNode<String> AvlNode, String element)
+   
+        
+    private void logRemovedElementWithLeafInfo(BaseNode<String> binaryNode, String element)
     {
-        AVLNode<String> toBeRemovedElement;
-        if(AvlNode.getLeftNode() != null && AvlNode.getLeftNode().getElement().equals(element)){
-            toBeRemovedElement = AvlNode.getLeftNode();
-            if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
-                logOutput.add(AvlNode.getElement() + ": Leaf Node Deleted: " + element);
-                return;
-            }
-            else if(toBeRemovedElement.getLeftNode() == null || toBeRemovedElement.getRightNode() == null){
-                logOutput.add(AvlNode.getElement() + ": Node with single child Deleted: " + element);
-                return;
-            }
-            else{
-                if(toBeRemovedElement.getRightNode().getLeftNode() != null){
-                    logOutput.add(AvlNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
-                    return;
-                }
-                else{
-                    logOutput.add(AvlNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
-                    return;
-                }
-            }
+        if(!element.equals(toBeRemovedElement)){
+            return;
         }
-        else if(AvlNode.getRightNode() != null && AvlNode.getRightNode().getElement().equals(element)){
-            toBeRemovedElement = AvlNode.getRightNode();
-            if(toBeRemovedElement.getLeftNode() == null && toBeRemovedElement.getRightNode() == null ){
-                logOutput.add(AvlNode.getElement() + ": Leaf Node Deleted: " + element);
-                return;
+        BaseNode<String> toBeRemovedElement;
+        if(checkIsLeft(binaryNode, element)){
+            toBeRemovedElement = binaryNode.getLeftNode();
+            CreateLog(binaryNode, toBeRemovedElement);
+        }
+        else if(checkIsRight(binaryNode, element)){
+            toBeRemovedElement = binaryNode.getRightNode();
+            CreateLog(binaryNode, toBeRemovedElement);
+        }
+    }
+
+    private void CreateLog(BaseNode<String> binaryNode, BaseNode<String> toBeRemovedElement) {
+        var nodeType = returnNodeType(toBeRemovedElement);
+        switch (nodeType){
+            case None :
+                break;
+            case SingleChildNode:
+                logOutput.add(binaryNode.getElement() + ": Node with single child Deleted: " + toBeRemovedElement.getElement() );
+                break;
+            case NonLeafNode:
+               if(toBeRemovedElement.getRightNode().getLeftNode() != null){
+                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ toBeRemovedElement.getElement()  +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
+               }
+               else{
+                   logOutput.add(binaryNode.getElement() + ": Non Leaf Node Deleted; removed: "+ toBeRemovedElement.getElement()  +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
+               }
+               break;
+           case LeafNode:
+                logOutput.add(binaryNode.getElement() + ": Leaf Node Deleted: " + toBeRemovedElement.getElement() );
+                break;
             }
-            else if(toBeRemovedElement.getLeftNode() == null || toBeRemovedElement.getRightNode() == null){
-                logOutput.add(AvlNode.getElement() + ": Node with single child Deleted: " + element);
-                return;
-            }
-            else{
-                if(toBeRemovedElement.getRightNode().getLeftNode() != null){
-                    logOutput.add(AvlNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getLeftNode().getElement());
-                    return;
-                }
-                else{
-                    logOutput.add(AvlNode.getElement() + ": Non Leaf Node Deleted; removed: "+ element +" replaced: "+ toBeRemovedElement.getRightNode().getElement());
-                    return;
-                }
-       }
+    }
+
+    private boolean checkIsLeft(BaseNode<String> node, String element){
+        if(node.getLeftNode() != null && node.getLeftNode().getElement().equals(element)){
+            return true;
+        }
+        return false;
+    }
+    private boolean checkIsRight(BaseNode<String> node, String element){
+        if(node.getRightNode() != null && node.getRightNode().getElement().equals(element)){
+            return true;
+        }
+        return false;
+    }
+    private NodeType returnNodeType(BaseNode<String> node){
+        if(node.getLeftNode() == null && node.getRightNode() == null){
+            return NodeType.LeafNode;
+        }
+        else if(node.getLeftNode() != null && node.getRightNode() == null){
+            return NodeType.SingleChildNode;
+        }
+        else if(node.getLeftNode() == null && node.getRightNode() != null){
+            return NodeType.SingleChildNode;
+        }
+        else if(node.getLeftNode() != null && node.getRightNode() != null){
+            return NodeType.NonLeafNode;
+        }
+        else{
+            return NodeType.None;
         }
     }
 }

@@ -6,7 +6,7 @@ public class Main {
         var inputDeserializer = new InputDeserializer(args[0]);
         var inputs = inputDeserializer.getInputs();
         //Create BST with root.
-        var BST = new BST(new BinaryNode<String>(inputs.get(0)[0]));
+        var BST = new BST(new BaseNode<String>(inputs.get(0)[0]));
         //MakeOperations with BST
         for(int i = 1; i < inputs.size() ; i++){
             BST.MakeOperation(inputs.get(i));
@@ -15,7 +15,7 @@ public class Main {
         BST.printLogsToTerminal(args[1]);
 
         //Create AVL Tree with root.
-        var AVL = new AVL(new AVLNode<String>(inputs.get(0)[0]));
+        var AVL = new AVL(new BaseNode<String>(inputs.get(0)[0]));
         //MakeOperations with AVL
         for(int i = 1; i < inputs.size() ; i++){
             AVL.MakeOperation(inputs.get(i));
